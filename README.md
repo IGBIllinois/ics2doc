@@ -22,7 +22,7 @@ Or, if you're brave, just run install the requirements into your base python ins
 pip install -r requirements.txt
 ```
 
-Copy config.py.dist to config.py and enter ics and mail parameters into config.py.
+Copy config.py.dist to config.py and enter the ics url into config.py.
 
 ## Usage
 
