@@ -7,7 +7,6 @@ defusedxml==0.6.0
 html5lib==1.0.1
 httplib2==0.12.1
 icalendar==4.0.3
-icalevents==0.1.19
 Jinja2==2.10.1
 MarkupSafe==1.1.1
 Pillow==6.0.0

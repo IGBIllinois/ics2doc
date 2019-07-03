@@ -1,5 +1,8 @@
+{%- macro randomColor() -%}
+    hsl({{range(0,360)|random}},{{range(50,101)|random}}%,{{range(30,70)|random}}%)
+{%- endmacro -%}
 {% macro showEvent(event) %}
-    <div class="event">
+    <div class="event" style="color: {{ randomColor() }}">
         <div class="eventTime">
             {{ event.start.astimezone(tz).strftime('%A %B %-d, %Y') }}<br>
             {{ event.start.astimezone(tz).strftime('%-I:%M%p') }} - {{ event.end.astimezone(tz).strftime('%-I:%M%p') }}
@@ -10,10 +13,10 @@
     </div>
 {% endmacro %}
 {% macro showAllDay(event) %}
-    <div class="event">
+    <div class="event" style="color: {{ randomColor() }}">
         <div class="eventTime">
             {{event.start.strftime('%A %B %-d, %Y') }}
-            {% if event.start != event.end %}
+            {% if event.start != event.end + allday_correction %}
                 - {{ (event.end + allday_correction).strftime('%A %B %-d, %Y') }}
             {% endif %}
         </div>
@@ -28,13 +31,15 @@
     <title>AV Meeting Agenda {{ date.strftime('%m/%d/%Y') }}</title>
     <style>
         * {
-            font-family: Lato, Helvetica;
+            font-family: Helvetica;
         }
         h2 {
             border-bottom: 1px solid #ddd;
         }
         .event {
             margin-bottom: 1rem;
+            font-size: 0.875rem;
+            padding-left: 1.5rem;
         }
         .eventTitle {
             font-weight: bold;
@@ -46,37 +51,46 @@
         pre.eventDescription {
             word-wrap: break-word;
             white-space: pre-wrap;
-            font-size: 0.625em;
+            font-size: 0.625rem;
         }
     </style>
 </head>
 <body>
     <h1>AV Meeting Agenda - {{ date.strftime('%m/%d/%Y') }}</h1>
     <h2>Last Week</h2>
-    {% for event in last_week_events %}
-        {% if event.all_day %}
-            {{ showAllDay(event) }}
-        {% else %}
-            {{ showEvent(event) }}
-        {% endif %}
+    {% for calendar in calendars %}
+        <h3>{{ calendar.title }}</h3>
+        {% for event in last_week_events[loop.index0] %}
+            {% if event.all_day %}
+                {{ showAllDay(event) }}
+            {% else %}
+                {{ showEvent(event) }}
+            {% endif %}
+        {% endfor %}
     {% endfor %}
 
     <h2>This Week</h2>
-    {% for event in next_week_events %}
-        {% if event.all_day %}
-            {{ showAllDay(event) }}
-        {% else %}
-            {{ showEvent(event) }}
-        {% endif %}
+    {% for calendar in calendars %}
+        <h3>{{ calendar.title }}</h3>
+        {% for event in next_week_events[loop.index0] %}
+            {% if event.all_day %}
+                {{ showAllDay(event) }}
+            {% else %}
+                {{ showEvent(event) }}
+            {% endif %}
+        {% endfor %}
     {% endfor %}
 
     <h2>Six Months</h2>
-    {% for event in six_months_events|sort(attribute='start') %}
-        {% if event.all_day %}
-            {{ showAllDay(event) }}
-        {% else %}
-            {{ showEvent(event) }}
-        {% endif %}
+    {% for calendar in calendars %}
+        <h3>{{ calendar.title }}</h3>
+        {% for event in six_months_events[loop.index0]|sort(attribute='start') %}
+            {% if event.all_day %}
+                {{ showAllDay(event) }}
+            {% else %}
+                {{ showEvent(event) }}
+            {% endif %}
+        {% endfor %}
     {% endfor %}
 
 </body>
