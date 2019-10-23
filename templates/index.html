@@ -1,5 +1,6 @@
 {%- macro randomColor() -%}
-    hsl({{range(0,360)|random}},{{range(50,101)|random}}%,{{range(30,70)|random}}%)
+    {#hsl({{range(0,360)|random}},{{range(50,101)|random}}%,{{range(30,70)|random}}%)#}
+    hsl(0,0,0)
 {%- endmacro -%}
 {% macro showEvent(event) %}
     <div class="event" style="color: {{ randomColor() }}">
